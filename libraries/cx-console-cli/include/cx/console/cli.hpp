@@ -7,3 +7,5 @@
 #include "cx/console/cli/group.hpp"
 #include "cx/console/cli/help.hpp"
 #include "cx/console/cli/option.hpp"
+#include "cx/console/cli/router.hpp"
+#include "cx/console/cli/view.hpp"

@@ -236,14 +236,13 @@ inline std::string render_help(const group& grp, const std::string& invocation_p
         for (const auto& c : grp.commands()) widest = std::max(widest, c->name().size());
         for (const auto& g : grp.subgroups()) widest = std::max(widest, g->name().size());
 
+        const std::size_t col = widest + 2 + 2 + 2;
         std::string body;
         for (const auto& c : grp.commands()) {
-            detail::append_two_column_row(body, chalk::cyan(c->name()), c->help_text(), c->name().size() + 2 + 2 + 2,
-                                           width);
+            detail::append_two_column_row(body, chalk::cyan(c->name()), c->help_text(), col, width);
         }
         for (const auto& g : grp.subgroups()) {
-            detail::append_two_column_row(body, chalk::cyan(g->name()), g->help_text(), g->name().size() + 2 + 2 + 2,
-                                           width);
+            detail::append_two_column_row(body, chalk::cyan(g->name()), g->help_text(), col, width);
         }
         out << body;
     }
