@@ -1,0 +1,3 @@
+[submodule "third-party/cx-core"]
+	path = third-party/cx-core
+	url = git@github.com:arthurafarias/cx-core.git

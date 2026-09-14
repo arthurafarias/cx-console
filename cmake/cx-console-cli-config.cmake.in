@@ -1,0 +1,6 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(cxcore CONFIG)
+find_dependency(cx-console-chalk CONFIG)
+include("${CMAKE_CURRENT_LIST_DIR}/cx-console-cli-targets.cmake")
