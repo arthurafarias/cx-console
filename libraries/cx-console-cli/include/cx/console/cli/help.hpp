@@ -65,15 +65,18 @@ inline std::vector<std::string> wrap_text(const std::string& text, int width) {
 
 /// Left-pad `label` to `col` width for a two-column help row, then
 /// append (word-wrapped) help text starting at column `col`.
+/// `label_width` is the label's *visible* width; pass it separately when
+/// `label` carries ANSI escape codes (e.g. from chalk), since those bytes
+/// must not count toward the column math.
 inline void append_two_column_row(std::string& out, const std::string& label, const std::string& text,
-                                   std::size_t col, int width) {
+                                   std::size_t col, int width, std::size_t label_width) {
     out += "  " + label;
     if (text.empty()) {
         out += "\n";
         return;
     }
     std::size_t pad_to = col;
-    std::size_t current_len = 2 + label.size();
+    std::size_t current_len = 2 + label_width;
     if (current_len + 2 > pad_to) {
         out += "\n";
         out += std::string(pad_to, ' ');
@@ -179,7 +182,8 @@ inline std::string render_help(const command& cmd, const std::string& invocation
             std::string help_text = arg->help_text() + detail::argument_help_suffix(*arg);
             // Column alignment uses the plain (unstyled) label width, not
             // the ANSI-escaped one.
-            detail::append_two_column_row(body, label, help_text, arg->name().size() + 2 + 2 + 2, width);
+            detail::append_two_column_row(body, label, help_text, arg->name().size() + 2 + 2 + 2, width,
+                                           arg->name().size());
         }
         out << body;
     }
@@ -239,10 +243,10 @@ inline std::string render_help(const group& grp, const std::string& invocation_p
         const std::size_t col = widest + 2 + 2 + 2;
         std::string body;
         for (const auto& c : grp.commands()) {
-            detail::append_two_column_row(body, chalk::cyan(c->name()), c->help_text(), col, width);
+            detail::append_two_column_row(body, chalk::cyan(c->name()), c->help_text(), col, width, c->name().size());
         }
         for (const auto& g : grp.subgroups()) {
-            detail::append_two_column_row(body, chalk::cyan(g->name()), g->help_text(), col, width);
+            detail::append_two_column_row(body, chalk::cyan(g->name()), g->help_text(), col, width, g->name().size());
         }
         out << body;
     }
